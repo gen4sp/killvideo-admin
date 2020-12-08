@@ -30,7 +30,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/antd-ui'],
+  plugins: [
+    '@/plugins/antd-ui',
+    '@/plugins/api',
+    { src: '~/plugins/vuex-persist', ssr: false }
+  ],
   /*
    ** Nuxt.js dev-modules
    */
@@ -45,14 +49,21 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/proxy'
   ],
+  // proxy: ['http://api.killvideo.tv/v1'],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {
-    baseURL: 'http://localhost:5000/api/v1'
+  // axios: {
+  //   baseURL: 'http://api.killvideo.tv/v1'
+  // },
+  env: {
+    API_ENDPOINT: process.env.API_ENDPOINT
+      ? process.env.API_ENDPOINT
+      : 'http://localhost:8000/v1'
   },
   /*
    ** Build configuration

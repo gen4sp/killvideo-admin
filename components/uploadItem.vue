@@ -1,28 +1,25 @@
 <template>
   <div>
+    <div v-if="value">
+      <a @click="openPreview">{{ value }}</a>
+      <a-button @click="removeHandle">
+        <a-icon :type="'delete'" />
+      </a-button>
+    </div>
+
     <a-upload
+      v-else
       name="file"
       :multiple="false"
       :accept="accept"
-      :before-upload="beforeUpload"
       :file-list="fileList"
       :action="actionUrl"
       :custom-request="upload"
       :remove="removeHandle"
     >
-      <a-button
-        v-if="!aeUploaded"
-        :loading="uploadingAE"
-        :disabled="uploadingAE"
-      >
-        <a-icon type="upload" />
-        {{
-          aeUploaded
-            ? 'uploaded'
-            : uploadingAE
-            ? 'Uploadinig...'
-            : 'Click to Upload'
-        }}
+      <a-button :loading="loading" :disabled="loading">
+        <a-icon :type="'upload'" />
+        {{ value ? 'uploaded' : loading ? 'Uploadinig...' : 'Click to Upload' }}
       </a-button>
     </a-upload>
   </div>
@@ -33,8 +30,9 @@ export default {
   props: ['actionUrl', 'accept', 'value'],
   data() {
     return {
+      valueUrl: null,
       fileList: [],
-      uploadingAE: false
+      loading: false
     }
   },
   computed: {
@@ -44,10 +42,14 @@ export default {
   },
   mounted() {
     if (this.value) {
-      this.fileList = [this.value]
+      this.fileList = this.value
     }
   },
   methods: {
+    openPreview() {
+      const url = this.c || `http://cdn.killvideo.tv/${this.value}`
+      window.open(url, '_blank')
+    },
     removeHandle(file) {
       this.fileList = []
       this.$emit('remove')
@@ -56,17 +58,15 @@ export default {
     handleRemove(file) {
       this.fileList = []
     },
-    beforeUpload(file) {
-      this.fileList = [file]
-      return true
-    },
     upload(info) {
-      this.uploadingAE = true
-      return this.$api.upload(info.file, info.action).then((req, res) => {
-        this.uploadingAE = false
-        console.log(' >>> ', req, res)
-        this.$emit('uploaded', req.data.files.path)
-        this.$emit('input', req.data.files.path)
+      this.loading = true
+      return this.$api.upload(info.file, info.action).then((res) => {
+        this.loading = false
+        console.log(' >>> ', res)
+        console.log('=== ', res.data.files, res.data.files[0])
+        this.valueUrl = `http://cdn.killvideo.tv/${res.data.files[0].path}`
+        this.$emit('uploaded', res.data.files[0].path)
+        this.$emit('input', res.data.files[0].filename)
       })
     }
   }

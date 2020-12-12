@@ -37,13 +37,7 @@ const validateEmail = (rule, value, callback) => {
   if (!emailRegex.test(value)) {
     return callback(new Error('Please input valid email address'))
   }
-  console.log('x')
-  // this.$refs.formInline.clearValidate('email');
-  console.log('x2')
-  // this.$nextTick(() => {
-  console.log('x23')
   callback()
-  // });
 }
 export default {
   data() {
@@ -82,18 +76,14 @@ export default {
               data: this.formInline
             })
             .then(({ data }) => {
-              console.log('Q', data)
               if (data.status !== 'success') {
                 return
               }
-              console.log('Q2', this.formInline, data)
               this.emailSent = true
               this.$api.auth.setSession({
                 username: this.formInline.email,
                 token: data.token
               })
-              console.log(data)
-              console.log(this.$api.auth)
               this.$emit('onDone', true)
               // Email sent! Please check your inbox.
             })

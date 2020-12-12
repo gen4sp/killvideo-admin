@@ -1,50 +1,64 @@
 <template>
-  <div>
-    =={{ form.aeUrl }}]]
-    <a-modal
-      :visible="visible"
-      title="Add stream"
-      @ok="handleOk"
-      @cancel="handleCancel"
+  <a-modal
+    :visible="visible"
+    title="Add stream"
+    @ok="handleOk"
+    @cancel="handleCancel"
+  >
+    <a-form-model
+      ref="ruleForm"
+      :model="form"
+      :rules="rules"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
     >
-      <a-form-model
-        ref="ruleForm"
-        :model="form"
-        :rules="rules"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
-        <!-- NAME -->
-        <a-form-model-item ref="ae" label="AE file" prop="ae">
-          <upload-item
-            v-model="form.aeUrl"
-            :action-url="actionUrl"
-            accept=".aep"
-          />
-        </a-form-model-item>
+      <!-- NAME -->
+      <a-form-model-item ref="ae" label="AE file" prop="ae">
+        <upload-item
+          v-model="form.aeUrl"
+          :action-url="actionUrl('ae')"
+          accept=".aep"
+          @uploaded="uploadedHanlde('ae', $event)"
+        />
+      </a-form-model-item>
 
-        <a-form-model-item ref="jsonname" label="JSON file" prop="json">
-          <upload-item
-            v-model="form.jsonUrl"
-            :action-url="jsonActionUrl"
-            accept=".json"
-          />
-        </a-form-model-item>
+      <a-form-model-item ref="json" label="JSON file" prop="json">
+        <upload-item
+          v-model="form.jsonUrl"
+          :action-url="actionUrl('json')"
+          accept=".json"
+        />
+      </a-form-model-item>
 
-        <a-form-model-item label="Activity form" prop="desc">
-          <a-input v-model="form.desc" type="textarea" />
-        </a-form-model-item>
-        <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-          <a-button type="primary" @click="onSubmit">
-            Create
-          </a-button>
-          <a-button style="margin-left: 10px;" @click="resetForm">
-            Reset
-          </a-button>
-        </a-form-model-item>
-      </a-form-model>
-    </a-modal>
-  </div>
+      <a-form-model-item ref="cover" label="Cover image" prop="cover">
+        <upload-item
+          v-model="form.coverUrl"
+          :action-url="actionUrl('cover')"
+          accept=".jpeg"
+        />
+      </a-form-model-item>
+
+      <a-form-model-item ref="preview" label="Video preview" prop="preview">
+        <upload-item
+          v-model="form.previewUrl"
+          :action-url="actionUrl('preview')"
+          accept=".mp4"
+        />
+      </a-form-model-item>
+
+      <a-form-model-item label="Activity form" prop="desc">
+        <a-input v-model="form.desc" type="textarea" />
+      </a-form-model-item>
+      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+        <a-button type="primary" @click="onSubmit">
+          Create
+        </a-button>
+        <a-button style="margin-left: 10px;" @click="resetForm">
+          Reset
+        </a-button>
+      </a-form-model-item>
+    </a-form-model>
+  </a-modal>
 </template>
 
 <script>
@@ -53,11 +67,14 @@ export default {
   components: {
     UploadItem
   },
-  props: ['visible', 'templateId'],
+  props: ['visible', 'template'],
   data() {
     return {
       form: {
-        aeUrl: null
+        aeUrl: null,
+        jsonUrl: null,
+        coverUrl: null,
+        previewUrl: null
       },
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -110,17 +127,26 @@ export default {
       }
     }
   },
-  computed: {
-    actionUrl() {
-      // ${this.$api.getApiUrl()}
-      return `/templates/${this.templateId}/upload/ae`
-    },
-    jsonActionUrl() {
-      // ${this.$api.getApiUrl()}
-      return `/templates/${this.templateId}/upload/json`
+  computed: {},
+  watch: {
+    visible(val) {
+      if (val && this.template) {
+        this.form.aeUrl = this.template.ae_path
+        console.log('opened')
+      }
     }
   },
   methods: {
+    uploadedHanlde(type, file) {
+      console.log('uh', type, file)
+      return (a, b) => {}
+    },
+    actionUrl(type) {
+      // ${this.$api.getApiUrl()}
+      return this.template
+        ? `/templates/${this.template.id}/upload/${type}`
+        : ''
+    },
     handleOk(e) {
       console.log(e)
       this.$emit('onClose', {})

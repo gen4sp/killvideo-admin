@@ -1,12 +1,12 @@
 <template>
   <div>
-    <a-table :columns="columns" :data-source="templates">
+    <a-table :columns="columns" :data-source="templates" :loading="loading">
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="img" slot-scope="text">
         <div
           class="poster"
           :style="{
-            backgroundImage: `url('https://killvideo.tv/${text
+            backgroundImage: `url('http://cdn.killvideo.tv/${text
               .split('\\')
               .join('\\\\')}')`
           }"
@@ -24,14 +24,15 @@
         </a-tag>
       </span>
       <span slot="action" slot-scope="record">
-        <a @click="openEditTemplate(record.id)">Edit</a>
+        <a @click="openEditTemplate(record)">Edit</a>
         <a-divider type="vertical" />
         <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
       </span>
     </a-table>
     <EditTemplate
-      :template-id="selectedTemplateId"
+      :template="selectedTemplate"
       :visible="editTemplateModalShown"
+      @onClose="EditTemplateModalOnCloseHandle"
     />
   </div>
 </template>
@@ -76,7 +77,8 @@ export default {
   middleware: 'authguard',
   data() {
     return {
-      selectedTemplateId: null,
+      loading: false,
+      selectedTemplate: null,
       editTemplateModalShown: false,
       templates: [],
       columns
@@ -86,15 +88,20 @@ export default {
     this.fetch()
   },
   methods: {
-    openEditTemplate(templateId) {
-      this.selectedTemplateId = templateId
+    EditTemplateModalOnCloseHandle() {
+      this.selectedTemplate = null
+      this.editTemplateModalShown = false
+    },
+    openEditTemplate(template) {
+      this.selectedTemplate = template
       this.editTemplateModalShown = true
-      console.log('sfs', templateId)
+      console.log('sfs', template)
     },
     gotoNewChannel() {
       this.$router.push('/channel/')
     },
     fetch() {
+      this.loading = true
       return this.$api
         .apiCall({
           method: 'GET',
@@ -102,6 +109,7 @@ export default {
         })
         .then((data) => {
           console.log('td ', data)
+          this.loading = false
           this.templates = data.data
         })
     }

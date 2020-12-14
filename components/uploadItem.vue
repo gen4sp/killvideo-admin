@@ -2,6 +2,29 @@
   <div>
     <div v-if="value">
       <a @click="openPreview">{{ value }}</a>
+      <div>
+        <div
+          v-if="previewType === 'image'"
+          class="preview image"
+          :style="{
+            backgroundImage: `url(http://cdn.killvideo.tv/${value})`
+          }"
+        ></div>
+        <video
+          v-else-if="previewType === 'video'"
+          class="preview"
+          width="320"
+          height="240"
+          controls
+        >
+          <source :src="`http://cdn.killvideo.tv/${value}`" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <JsonViewer
+          v-else-if="previewType === 'json'"
+          :url="`http://cdn.killvideo.tv/${value}`"
+        ></JsonViewer>
+      </div>
       <a-button @click="removeHandle">
         <a-icon :type="'delete'" />
       </a-button>
@@ -26,12 +49,17 @@
 </template>
 
 <script>
+import JsonViewer from '~/components/JsonViewer'
 export default {
-  props: ['actionUrl', 'accept', 'value'],
+  components: {
+    JsonViewer
+  },
+  props: ['actionUrl', 'accept', 'value', 'previewType'],
   data() {
     return {
       valueUrl: null,
       fileList: [],
+      jsonValue: {},
       loading: false
     }
   },
@@ -73,4 +101,15 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.preview {
+  width: 100%;
+  height: 200px;
+  &.image {
+    background-size: contain;
+    background-color: #eee;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+}
+</style>

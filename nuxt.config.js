@@ -25,7 +25,9 @@ export default {
    */
   css: [
     'ant-design-vue/dist/antd.css',
-    'vue-query-builder/dist/VueQueryBuilder.css'
+    'vue-query-builder/dist/VueQueryBuilder.css',
+    'vue-json-pretty/lib/styles.css',
+    '@/assets/app.scss'
   ],
   /*
    ** Plugins to load before mounting the App
@@ -33,6 +35,7 @@ export default {
   plugins: [
     '@/plugins/antd-ui',
     '@/plugins/api',
+    '@/plugins/vue-json-pretty',
     { src: '~/plugins/vuex-persist', ssr: false }
   ],
   /*

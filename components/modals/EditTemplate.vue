@@ -54,6 +54,7 @@
       <a-form-model-item label="JSON file" prop="jsonUrl">
         <upload-item
           v-model="form.jsonUrl"
+          preview-type="json"
           :action-url="actionUrl('json')"
           accept=".json"
         />
@@ -62,6 +63,7 @@
       <a-form-model-item label="Cover image" prop="coverUrl">
         <upload-item
           v-model="form.coverUrl"
+          preview-type="image"
           :action-url="actionUrl('cover')"
           accept=".jpeg"
         />
@@ -70,6 +72,7 @@
       <a-form-model-item label="Video preview" prop="previewUrl">
         <upload-item
           v-model="form.previewUrl"
+          preview-type="video"
           :action-url="actionUrl('preview')"
           accept=".mp4"
         />

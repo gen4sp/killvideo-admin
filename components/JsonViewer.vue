@@ -1,6 +1,9 @@
 <template>
   <div class="json-wrapper">
-    <vue-json-pretty :data="jsondata"></vue-json-pretty>
+    <div v-if="loading" class="loader">
+      <a-spin />
+    </div>
+    <vue-json-pretty v-else :data="jsondata"></vue-json-pretty>
   </div>
 </template>
 
@@ -15,25 +18,37 @@ export default {
   props: ['url'],
   data() {
     return {
-      jsondata: {}
+      jsondata: {},
+      loading: false
+    }
+  },
+  watch: {
+    url() {
+      this.fetch()
     }
   },
   mounted() {
-    console.log('PRES', this.url)
-    // axios.get(this.url)
-    this.$axios
-      .$get(this.url, {
-        headers: {
-          'Access-Control-Origin': '*',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST',
-          'Access-Control-Allow-Headers': 'Content-Type'
-        }
-      })
-      .then((res) => {
-        console.log('RES', res)
-        this.jsondata = res.data
-      })
+    this.fetch()
+  },
+  methods: {
+    fetch() {
+      this.loading = true
+      this.jsondata = {}
+
+      this.$axios
+        .$get(this.url, {
+          headers: {
+            'Access-Control-Origin': '*',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST',
+            'Access-Control-Allow-Headers': 'Content-Type'
+          }
+        })
+        .then((res) => {
+          this.loading = false
+          this.jsondata = res.data
+        })
+    }
   }
 }
 </script>
@@ -43,5 +58,12 @@ export default {
   height: 200px;
   overflow: scroll;
   background-color: #eee;
+}
+.loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

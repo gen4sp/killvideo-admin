@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="value">
-      <a @click="openPreview">{{ value }}</a>
+      <a @click="openPreview">{{ shortValue }}</a>
       <div>
         <div
           v-if="previewType === 'image'"
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import JsonViewer from '~/components/JsonViewer'
 export default {
   components: {
@@ -66,6 +67,9 @@ export default {
   computed: {
     aeUploaded() {
       return this.fileList.length > 0
+    },
+    shortValue() {
+      return _.takeRight(this.value.split('/'))[0]
     }
   },
   mounted() {

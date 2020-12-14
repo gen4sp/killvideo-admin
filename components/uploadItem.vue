@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     openPreview() {
-      const url = this.c || `http://cdn.killvideo.tv/${this.value}`
+      const url = this.valueUrl || `http://cdn.killvideo.tv/${this.value}`
       window.open(url, '_blank')
     },
     removeHandle(file) {
@@ -66,7 +66,7 @@ export default {
         console.log('=== ', res.data.files, res.data.files[0])
         this.valueUrl = `http://cdn.killvideo.tv/${res.data.files[0].path}`
         this.$emit('uploaded', res.data.files[0].path)
-        this.$emit('input', res.data.files[0].filename)
+        this.$emit('input', res.data.files[0].path)
       })
     }
   }

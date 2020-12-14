@@ -1,5 +1,6 @@
 <template>
   <div>
+    <a-button @click="openEditTemplate()">+</a-button>
     <a-table :columns="columns" :data-source="templates" :loading="loading">
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="img" slot-scope="text">
@@ -88,7 +89,41 @@ export default {
     this.fetch()
   },
   methods: {
-    EditTemplateModalOnCloseHandle() {
+    EditTemplateModalOnCloseHandle(data) {
+      console.log(' O ', data)
+      if (!data) {
+        this.closeEditTemplate()
+        return
+      }
+      if (data.id) {
+        this.$api
+          .apiCall({
+            method: 'POST',
+            url: `/templates/${data.id}`,
+            data
+          })
+          .then((data) => {
+            console.log('td edit', data)
+            this.closeEditTemplate()
+          })
+      } else {
+        this.$api
+          .apiCall({
+            method: 'POST',
+            url: '/templates/',
+            data
+          })
+          .then((data) => {
+            console.log('td creatre ', data)
+            this.closeEditTemplate()
+          })
+      }
+
+      // this.selectedTemplate = null
+      // this.editTemplateModalShown = false
+      // console.log('> ', data)
+    },
+    closeEditTemplate() {
       this.selectedTemplate = null
       this.editTemplateModalShown = false
     },

@@ -105,6 +105,7 @@ export default {
           .then((data) => {
             console.log('td edit', data)
             this.closeEditTemplate()
+            this.fetch()
           })
       } else {
         this.$api

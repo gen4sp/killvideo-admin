@@ -34,7 +34,7 @@ export default {
     fetch() {
       this.loading = true
       this.jsondata = {}
-
+      console.log('URL', this.url)
       this.$axios
         .$get(this.url, {
           headers: {
@@ -46,7 +46,8 @@ export default {
         })
         .then((res) => {
           this.loading = false
-          this.jsondata = res.data
+          console.log('=-=-=-=-=', res)
+          this.jsondata = res
         })
     }
   }

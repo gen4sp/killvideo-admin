@@ -42,6 +42,16 @@
         </div>
       </a-form-model-item>
 
+      <a-form-model-item ref="tags" label="Tags" prop="tags">
+        <a-select
+          v-model="form.tags"
+          style="width: 100%"
+          placeholder="Enter tags here"
+          mode="tags"
+        >
+        </a-select>
+      </a-form-model-item>
+
       <a-form-model-item label="AE file" prop="aeUrl">
         <upload-item
           v-model="form.aeUrl"
@@ -100,6 +110,7 @@ const defaultFormValues = {
   aeUrl: null,
   jsonUrl: null,
   coverUrl: null,
+  tags: [],
   previewUrl: null,
   visibility: 'public'
 }
@@ -157,6 +168,7 @@ export default {
         this.form.jsonUrl = this.template.json_path
         this.form.coverUrl = this.template.poster
         this.form.previewUrl = this.template.preview
+        this.form.tags = this.template.tags
 
         if (
           this.template.visibility === 'public' ||
@@ -180,6 +192,7 @@ export default {
       res.json_path = this.form.jsonUrl
       res.poster = this.form.coverUrl
       res.preview = this.form.previewUrl
+      res.tags = this.form.tags
 
       res.id = this.form.id
 

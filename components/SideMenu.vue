@@ -20,6 +20,7 @@ export default {
       items: [
         { label: 'Templates', path: '/templates', icon: 'snippets' },
         { label: 'Tasks', path: '/tasks', icon: 'schedule' },
+        { label: 'Workers', path: '/workers', icon: 'setting' },
         { label: 'Users', path: '/users', icon: 'video-camera' }
       ]
     }

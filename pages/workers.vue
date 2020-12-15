@@ -1,7 +1,8 @@
 <template>
   <div>
-    <!-- <a-button @click="openEditTemplate()">+</a-button> -->
-    <a-table :columns="columns" :data-source="templates" :loading="loading">
+    <a-button @click="openEditTemplate()">+</a-button>
+    comming soon
+    <!-- <a-table :columns="columns" :data-source="templates" :loading="loading">
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="img" slot-scope="text">
         <div
@@ -13,16 +14,24 @@
           }"
         ></div>
       </span>
-      <span slot="checkbox" slot-scope="record">
-        <a-checkbox :default-checked="Boolean(record)" disabled></a-checkbox>
+      <span slot="tags" slot-scope="tags">
+        <a-tag
+          v-for="tag in tags"
+          :key="tag"
+          :color="
+            tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'
+          "
+        >
+          {{ tag.toUpperCase() }}
+        </a-tag>
       </span>
       <span slot="action" slot-scope="record">
         <a @click="openEditTemplate(record)">Edit</a>
         <a-divider type="vertical" />
         <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
       </span>
-    </a-table>
-    <EditUser
+    </a-table> -->
+    <EditTemplate
       :template="selectedTemplate"
       :visible="editTemplateModalShown"
       @onClose="EditTemplateModalOnCloseHandle"
@@ -31,24 +40,30 @@
 </template>
 
 <script>
-import EditUser from '~/components/modals/EditUser'
+import EditTemplate from '~/components/modals/EditTemplate'
 const columns = [
   {
-    dataIndex: 'id',
-    key: 'id',
-
+    dataIndex: 'poster',
+    key: 'poster',
+    scopedSlots: { customRender: 'img' },
     width: 140
   },
   {
-    title: 'email',
-    dataIndex: 'email',
-    key: 'email'
+    title: 'Title',
+    dataIndex: 'title',
+    key: 'title'
   },
   {
-    title: 'admin',
-    dataIndex: 'admin',
-    key: 'admin',
-    scopedSlots: { customRender: 'checkbox' }
+    title: 'Renders',
+    dataIndex: 'count',
+    key: 'count'
+  },
+
+  {
+    title: 'Tags',
+    key: 'tags',
+    dataIndex: 'tags',
+    scopedSlots: { customRender: 'tags' }
   },
   {
     title: 'Action',
@@ -59,7 +74,7 @@ const columns = [
 ]
 export default {
   components: {
-    EditUser
+    EditTemplate
   },
   middleware: 'authguard',
   data() {
@@ -119,13 +134,15 @@ export default {
       this.editTemplateModalShown = true
       console.log('sfs', template)
     },
-
+    gotoNewChannel() {
+      this.$router.push('/channel/')
+    },
     fetch() {
       this.loading = true
       return this.$api
         .apiCall({
           method: 'GET',
-          url: '/users/'
+          url: '/templates/'
         })
         .then((data) => {
           console.log('td ', data)

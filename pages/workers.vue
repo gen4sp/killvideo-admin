@@ -1,8 +1,7 @@
 <template>
   <div>
-    <a-button @click="openEditTemplate()">+</a-button>
-    comming soon
-    <!-- <a-table :columns="columns" :data-source="templates" :loading="loading">
+    <!-- <a-button @click="openEditTemplate()">+</a-button> -->
+    <a-table :columns="columns" :data-source="templates" :loading="loading">
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="img" slot-scope="text">
         <div
@@ -14,24 +13,16 @@
           }"
         ></div>
       </span>
-      <span slot="tags" slot-scope="tags">
-        <a-tag
-          v-for="tag in tags"
-          :key="tag"
-          :color="
-            tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'
-          "
-        >
-          {{ tag.toUpperCase() }}
-        </a-tag>
+      <span slot="checkbox" slot-scope="record">
+        <a-checkbox :default-checked="Boolean(record)" disabled></a-checkbox>
       </span>
       <span slot="action" slot-scope="record">
         <a @click="openEditTemplate(record)">Edit</a>
         <a-divider type="vertical" />
         <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
       </span>
-    </a-table> -->
-    <EditTemplate
+    </a-table>
+    <EditUser
       :template="selectedTemplate"
       :visible="editTemplateModalShown"
       @onClose="EditTemplateModalOnCloseHandle"
@@ -40,41 +31,48 @@
 </template>
 
 <script>
-import EditTemplate from '~/components/modals/EditTemplate'
+import EditUser from '~/components/modals/EditUser'
 const columns = [
   {
-    dataIndex: 'poster',
-    key: 'poster',
-    scopedSlots: { customRender: 'img' },
+    dataIndex: 'id',
+    key: 'id',
+    title: 'ID',
     width: 140
   },
   {
-    title: 'Title',
-    dataIndex: 'title',
-    key: 'title'
+    title: 'createdAt',
+    dataIndex: 'created_at',
+    key: 'created_at'
+    // scopedSlots: { customRender: 'checkbox' }
   },
   {
-    title: 'Renders',
-    dataIndex: 'count',
-    key: 'count'
-  },
-
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    scopedSlots: { customRender: 'tags' }
+    title: 'updatedAt',
+    dataIndex: 'updated_at',
+    key: 'updated_at'
+    // scopedSlots: { customRender: 'checkbox' }
   },
   {
-    title: 'Action',
-    key: 'action',
-    scopedSlots: { customRender: 'action' },
-    width: 190
+    title: 'works_done',
+    dataIndex: 'works_done',
+    key: 'works_done'
+    // scopedSlots: { customRender: 'checkbox' }
+  },
+  {
+    title: 'errors',
+    dataIndex: 'errors',
+    key: 'errors'
+    // scopedSlots: { customRender: 'checkbox' }
   }
+  // {
+  //   title: 'Action',
+  //   key: 'action',
+  //   scopedSlots: { customRender: 'action' },
+  //   width: 190
+  // }
 ]
 export default {
   components: {
-    EditTemplate
+    EditUser
   },
   middleware: 'authguard',
   data() {
@@ -134,15 +132,13 @@ export default {
       this.editTemplateModalShown = true
       console.log('sfs', template)
     },
-    gotoNewChannel() {
-      this.$router.push('/channel/')
-    },
+
     fetch() {
       this.loading = true
       return this.$api
         .apiCall({
           method: 'GET',
-          url: '/templates/'
+          url: '/workers/'
         })
         .then((data) => {
           console.log('td ', data)

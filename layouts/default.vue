@@ -5,12 +5,15 @@
       <SideMenu />
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
+      <a-layout-header class="hheader">
         <a-icon
           class="trigger"
           :type="collapsed ? 'menu-unfold' : 'menu-fold'"
           @click="() => (collapsed = !collapsed)"
         />
+        <div class="logout" @click="logout">
+          Logout
+        </div>
       </a-layout-header>
       <a-layout-content
         :style="{
@@ -36,15 +39,31 @@ export default {
     return {
       collapsed: false
     }
+  },
+  methods: {
+    logout() {
+      this.$api.auth.logout()
+      this.$router.push('/')
+    }
   }
 }
 </script>
 
 <style lang="scss">
+.hheader {
+  background: #fff;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 24px;
+  .logout {
+    cursor: pointer;
+  }
+}
 #components-layout-demo-custom-trigger .trigger {
   font-size: 18px;
   line-height: 64px;
-  padding: 0 24px;
+
   cursor: pointer;
   transition: color 0.3s;
 }

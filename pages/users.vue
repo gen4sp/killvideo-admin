@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <a-button @click="openEditTemplate()">+</a-button> -->
-    <a-table :columns="columns" :data-source="templates" :loading="loading">
+    <a-table :columns="columns" :data-source="users" :loading="loading">
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="img" slot-scope="text">
         <div
@@ -17,20 +17,28 @@
         <a-checkbox :default-checked="Boolean(record)" disabled></a-checkbox>
       </span>
       <span slot="action" slot-scope="record">
-        <a @click="openEditTemplate(record)">Edit</a>
+        <a @click="openEditUser(record)">Edit</a>
         <a-divider type="vertical" />
-        <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
+        <a-dropdown>
+          <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
+          <a-menu slot="overlay">
+            <a-menu-item>
+              <a href="javascript:;" @click="deleteUser(record)">Delete</a>
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </span>
     </a-table>
     <EditUser
-      :template="selectedTemplate"
-      :visible="editTemplateModalShown"
-      @onClose="EditTemplateModalOnCloseHandle"
+      :user="selectedUser"
+      :visible="editUserModalShown"
+      @onClose="EditUserModalOnCloseHandle"
     />
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import EditUser from '~/components/modals/EditUser'
 const columns = [
   {
@@ -65,9 +73,9 @@ export default {
   data() {
     return {
       loading: false,
-      selectedTemplate: null,
-      editTemplateModalShown: false,
-      templates: [],
+      selectedUser: null,
+      editUserModalShown: false,
+      users: [],
       columns
     }
   },
@@ -75,34 +83,47 @@ export default {
     this.fetch()
   },
   methods: {
-    EditTemplateModalOnCloseHandle(data) {
+    deleteUser(data) {
+      console.log(' >> ', data)
+      this.$api
+        .apiCall({
+          method: 'DELETE',
+          url: `/users/${data.id}`
+        })
+        .then((data) => {
+          console.log('del', data)
+          this.closeEditUser()
+          this.fetch()
+        })
+    },
+    EditUserModalOnCloseHandle(data) {
       console.log(' O ', data)
       if (!data) {
-        this.closeEditTemplate()
+        this.closeEditUser()
         return
       }
       if (data.id) {
         this.$api
           .apiCall({
-            method: 'POST',
-            url: `/templates/${data.id}`,
-            data
+            method: 'PATCH',
+            url: `/users/${data.id}`,
+            data: _.omit(data, 'id')
           })
           .then((data) => {
             console.log('td edit', data)
-            this.closeEditTemplate()
+            this.closeEditUser()
             this.fetch()
           })
       } else {
         this.$api
           .apiCall({
             method: 'POST',
-            url: '/templates/',
+            url: '/users/',
             data
           })
           .then((data) => {
             console.log('td creatre ', data)
-            this.closeEditTemplate()
+            this.closeEditUser()
           })
       }
 
@@ -110,14 +131,14 @@ export default {
       // this.editTemplateModalShown = false
       // console.log('> ', data)
     },
-    closeEditTemplate() {
-      this.selectedTemplate = null
-      this.editTemplateModalShown = false
+    closeEditUser() {
+      this.selectedUser = null
+      this.editUserModalShown = false
     },
-    openEditTemplate(template) {
-      this.selectedTemplate = template
-      this.editTemplateModalShown = true
-      console.log('sfs', template)
+    openEditUser(user) {
+      this.selectedUser = user
+      this.editUserModalShown = true
+      console.log('sfs', user)
     },
 
     fetch() {
@@ -130,7 +151,7 @@ export default {
         .then((data) => {
           console.log('td ', data)
           this.loading = false
-          this.templates = data.data
+          this.users = data.data
         })
     }
   }

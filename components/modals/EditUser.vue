@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :visible="visible"
-    title="Add or edit user"
+    title="Edit user"
     ok-text="Save"
     @ok="handleOk"
     @cancel="handleCancel"
@@ -21,10 +21,10 @@
       <a-form-model-item ref="admin" label="Role" prop="admin">
         <div style="display:flex;">
           <a-select v-model="form.admin" style="width: 120px">
-            <a-select-option :value="true">
+            <a-select-option value="true">
               Admin
             </a-select-option>
-            <a-select-option :value="false">
+            <a-select-option value="false">
               User
             </a-select-option>
           </a-select>
@@ -38,19 +38,13 @@
 import _ from 'lodash'
 
 const defaultFormValues = {
-  title: null,
-  id: null,
-  aeUrl: null,
-  jsonUrl: null,
-  coverUrl: null,
-  tags: [],
-  previewUrl: null,
-  visibility: 'public'
+  email: null,
+  admin: null
 }
 
 export default {
   components: {},
-  props: ['visible', 'template'],
+  props: ['visible', 'user'],
   data() {
     return {
       form: _.clone(defaultFormValues),
@@ -91,61 +85,23 @@ export default {
     visible(val) {
       this.resetForm()
 
-      if (val && this.template) {
-        this.form.title = this.template.title
-        this.form.id = this.template.id
-
-        this.form.aeUrl = this.template.ae_path
-        this.form.jsonUrl = this.template.json_path
-        this.form.coverUrl = this.template.poster
-        this.form.previewUrl = this.template.preview
-        this.form.tags = this.template.tags
-
-        if (
-          this.template.visibility === 'public' ||
-          this.template.visibility === 'hidden'
-        ) {
-          this.form.visibility = this.template.visibility
-        } else {
-          this.form.visibility = 'private'
-          this.form.userIds = this.template.visibility.split(',')
-        }
+      if (val && this.user) {
+        this.form.email = this.user.email
+        this.form.admin = '' + this.user.admin
       }
-      console.log('zz', val, this.template, this.form)
+      console.log('zz', val, this.user, this.form)
     }
   },
   methods: {
     prepareFormData() {
       const res = {}
-      res.title = this.form.title
-
-      res.ae_path = this.form.aeUrl
-      res.json_path = this.form.jsonUrl
-      res.poster = this.form.coverUrl
-      res.preview = this.form.previewUrl
-      res.tags = this.form.tags
-
-      res.id = this.form.id
-
-      if (
-        this.form.visibility === 'public' ||
-        this.form.visibility === 'hidden'
-      ) {
-        res.visibility = this.form.visibility
-      } else {
-        res.visibility = this.form.userIds.join(',')
+      res.email = this.form.email
+      res.admin = Boolean(this.form.admin)
+      if (this.user.id) {
+        res.id = this.user.id
       }
+
       return res
-    },
-    uploadedHanlde(type, file) {
-      // console.log('uh', type, file)
-      return (a, b) => {}
-    },
-    actionUrl(type) {
-      // ${this.$api.getApiUrl()}
-      return this.template
-        ? `/templates/${this.template.id}/upload/${type}`
-        : `/templates/temp/upload/${type}`
     },
     handleOk(e) {
       this.onSubmit()
@@ -159,6 +115,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           const proceessedForm = this.prepareFormData()
+          console.log('pf', proceessedForm)
           this.$emit('onClose', proceessedForm)
         } else {
           console.log('error submit!!')

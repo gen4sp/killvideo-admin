@@ -6,7 +6,11 @@
     :selected-keys="selectedKeys"
     @click="onSelect"
   >
-    <a-menu-item v-for="item in items" :key="item.path">
+    <a-menu-item
+      v-for="item in items"
+      :key="item.path"
+      :disabled="item.disabled"
+    >
       <a-icon :type="item.icon" />
       <span>{{ item.label }}</span>
     </a-menu-item>
@@ -19,7 +23,7 @@ export default {
     return {
       items: [
         { label: 'Templates', path: '/templates', icon: 'snippets' },
-        { label: 'Tasks', path: '/tasks', icon: 'schedule' },
+        { label: 'Tasks', path: '/tasks', icon: 'schedule', disabled: true },
         { label: 'Workers', path: '/workers', icon: 'setting' },
         { label: 'Users', path: '/users', icon: 'video-camera' }
       ]

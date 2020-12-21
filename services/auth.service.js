@@ -23,7 +23,6 @@ export default class AuthService {
   static async create(_axios, _store) {
     this.axios = _axios
     this.store = _store
-    console.log('C ', this.axios, this.store)
     if (!this._instance) {
       this._instance = new AuthService()
 
@@ -55,7 +54,6 @@ export default class AuthService {
 
   static set accessToken(value) {
     localStorage.setItem('access_token', value)
-    console.log('aa', this.axios, this.store)
     this.store.commit('user/setUser', { token: value })
   }
 
@@ -82,7 +80,6 @@ export default class AuthService {
   }
 
   setSession(authResult) {
-    console.log('auth/setSession', authResult)
     if (authResult == null) {
       this.logout()
       return
@@ -118,7 +115,6 @@ export default class AuthService {
 
   async login(code) {
     const ret = await this.axios.post(authUrls.AUTH_VALIDATE_CODE, { code })
-    // console.log(ret.data)
     this.authResult = ret.data
     this.setSession(this.authResult)
   }
@@ -131,8 +127,6 @@ export default class AuthService {
       this.authResult = ret.data
       this.setSession(this.authResult)
     } catch (err) {
-      // console.error(err)
-      // console.log('Should now logout')
       this.setSession(null)
     }
   }

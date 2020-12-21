@@ -1,7 +1,12 @@
 <template>
   <div>
     <a-button @click="openEditTemplate()">+</a-button>
-    <a-table :columns="columns" :data-source="templates" :loading="loading">
+    <a-table
+      :columns="columns"
+      :data-source="templates"
+      :loading="loading"
+      row-key="id"
+    >
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="img" slot-scope="text">
         <div

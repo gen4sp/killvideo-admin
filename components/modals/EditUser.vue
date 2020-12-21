@@ -96,7 +96,7 @@ export default {
     prepareFormData() {
       const res = {}
       res.email = this.form.email
-      res.admin = Boolean(this.form.admin)
+      res.admin = this.form.admin === 'true'
       if (this.user.id) {
         res.id = this.user.id
       }

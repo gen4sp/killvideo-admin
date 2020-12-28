@@ -94,8 +94,6 @@ export default {
       this.loading = true
       return this.$api.upload(info.file, info.action).then((res) => {
         this.loading = false
-        console.log(' >>> ', res)
-        console.log('=== ', res.data.files, res.data.files[0])
         this.valueUrl = `http://cdn.killvideo.tv/${res.data.files[0].path}`
         this.$emit('uploaded', res.data.files[0].path)
         this.$emit('input', res.data.files[0].path)

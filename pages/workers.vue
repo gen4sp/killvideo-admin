@@ -13,8 +13,11 @@
           }"
         ></div>
       </span>
-      <span slot="checkbox" slot-scope="record">
-        <a-checkbox :default-checked="Boolean(record)" disabled></a-checkbox>
+      <span slot="timediff" slot-scope="record">
+        <span>
+          <dot :state="getTimeDiff(record, false) ? 'on' : 'off'"></dot>
+          {{ getTimeDiff(record, true) }}</span
+        >
       </span>
       <span slot="action" slot-scope="record">
         <a @click="openEditTemplate(record)">Edit</a>
@@ -31,6 +34,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+import Dot from '~/components/Dot'
 import EditUser from '~/components/modals/EditUser'
 const columns = [
   {
@@ -48,8 +53,8 @@ const columns = [
   {
     title: 'updatedAt',
     dataIndex: 'updated_at',
-    key: 'updated_at'
-    // scopedSlots: { customRender: 'checkbox' }
+    key: 'updated_at',
+    scopedSlots: { customRender: 'timediff' }
   },
   {
     title: 'works_done',
@@ -72,7 +77,8 @@ const columns = [
 ]
 export default {
   components: {
-    EditUser
+    EditUser,
+    Dot
   },
   middleware: 'authguard',
   data() {
@@ -88,6 +94,19 @@ export default {
     this.fetch()
   },
   methods: {
+    getTimeDiff(date, text) {
+      const now = new Date().getTime()
+      const upd = new Date(date).getTime()
+      const diff = now - upd
+      if (!text) {
+        return diff < 10000
+      }
+      if (diff < 10000) {
+        return Math.round(diff / 1000) + ' sec '
+      } else {
+        return 'Down ' + moment(date).fromNow()
+      }
+    },
     EditTemplateModalOnCloseHandle(data) {
       console.log(' O ', data)
       if (!data) {

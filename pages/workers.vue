@@ -83,6 +83,7 @@ export default {
   middleware: 'authguard',
   data() {
     return {
+      serverTimeDiff: 0,
       loading: false,
       selectedTemplate: null,
       editTemplateModalShown: false,
@@ -91,13 +92,14 @@ export default {
     }
   },
   mounted() {
+    this.getSystemTime()
     this.fetch()
   },
   methods: {
     getTimeDiff(date, text) {
       const now = new Date().getTime()
       const upd = new Date(date).getTime()
-      const diff = now - upd
+      const diff = now - upd + this.serverTimeDiff
       if (!text) {
         return diff < 10000
       }
@@ -151,7 +153,18 @@ export default {
       this.editTemplateModalShown = true
       console.log('sfs', template)
     },
-
+    getSystemTime() {
+      return this.$api
+        .apiCall({
+          method: 'GET',
+          url: '/system/time'
+        })
+        .then((res) => {
+          console.log(res)
+          const now = new Date().getTime()
+          this.serverTimeDiff = now - res.time
+        })
+    },
     fetch() {
       this.loading = true
       return this.$api

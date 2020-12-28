@@ -99,7 +99,7 @@ export default {
     getTimeDiff(date, text) {
       const now = new Date().getTime()
       const upd = new Date(date).getTime()
-      const diff = now - upd + this.serverTimeDiff
+      const diff = now - upd - this.serverTimeDiff
       if (!text) {
         return diff < 10000
       }

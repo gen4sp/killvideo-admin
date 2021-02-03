@@ -56,7 +56,7 @@
         <upload-item
           v-model="form.aeUrl"
           :action-url="actionUrl('ae')"
-          accept=".aep"
+          accept=".zip"
           @uploaded="uploadedHanlde('ae', $event)"
         />
       </a-form-model-item>

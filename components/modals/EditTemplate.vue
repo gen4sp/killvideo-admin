@@ -52,7 +52,20 @@
         </a-select>
       </a-form-model-item>
 
-      <a-form-model-item label="AE file" prop="aeUrl">
+      <!-- <a-form-model-item label="Archive or separately " prop="zipUrl">
+        <a-switch v-model="form.isArchive" default-checked />
+      </a-form-model-item> -->
+
+      <!-- <a-form-model-item v-if="form.isArchive" label="ZIP file" prop="zipUrl">
+        <upload-item
+          v-model="form.aeUrl"
+          :action-url="actionUrl('zip')"
+          accept=".zip"
+          @uploaded="uploadedHanlde('zip', $event)"
+        />
+      </a-form-model-item> -->
+
+      <a-form-model-item label="ZIP file" prop="aeUrl">
         <upload-item
           v-model="form.aeUrl"
           :action-url="actionUrl('ae')"
@@ -105,6 +118,7 @@ import _ from 'lodash'
 import UploadItem from '~/components/uploadItem'
 
 const defaultFormValues = {
+  isArchive: true,
   title: null,
   id: null,
   aeUrl: null,

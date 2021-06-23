@@ -25,7 +25,8 @@ export default {
         { label: 'Templates', path: '/templates', icon: 'snippets' },
         { label: 'Tasks', path: '/tasks', icon: 'schedule', disabled: true },
         { label: 'Workers', path: '/workers', icon: 'setting' },
-        { label: 'Users', path: '/users', icon: 'video-camera' }
+        { label: 'Users', path: '/users', icon: 'video-camera' },
+        { label: 'Uploads', path: '/uploads', icon: 'database' }
       ]
     }
   },

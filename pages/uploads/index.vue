@@ -31,8 +31,8 @@
             Actions <a-icon type="down" />
           </a>
           <a-menu slot="overlay" @click="(key) => menuClickHandle(key, record)">
-            <a-menu-item key="filterByUser">
-              <a href="http://www.alipay.com/">Uploads by user</a>
+            <a-menu-item key="filterByUser" disabled>
+              <a href="#" style="opacity:0.5;">Uploads by user</a>
             </a-menu-item>
             <a-menu-divider />
             <a-menu-item key="delete">
@@ -104,6 +104,16 @@ export default {
   methods: {
     menuClickHandle(action, record) {
       console.log('Action', action, record)
+      if (action.key === 'delete') {
+        return this.$api
+          .apiCall({
+            method: 'DELETE',
+            url: `/uploads/${record.id}`
+          })
+          .then((data) => {
+            this.fetch()
+          })
+      }
     },
     getColor(mediatype) {
       return MediaTypeIconService.getColor(mediatype)

@@ -45,7 +45,7 @@
         <a-statistic
           class="centred"
           title="Media coins"
-          :value="total.meida_sum"
+          :value="total.media_sum"
         >
           <template #suffix>
             <span> coins</span>

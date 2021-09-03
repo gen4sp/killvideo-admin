@@ -23,6 +23,7 @@ export default {
     return {
       items: [
         { label: 'Templates', path: '/templates', icon: 'snippets' },
+        { label: 'Stat', path: '/stat', icon: 'schedule' },
         { label: 'Tasks', path: '/tasks', icon: 'schedule', disabled: true },
         { label: 'Workers', path: '/workers', icon: 'setting' },
         { label: 'Users', path: '/users', icon: 'video-camera' },

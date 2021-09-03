@@ -17,7 +17,7 @@
         <a-statistic
           class="centred"
           title="Payments qty"
-          :value="daily.payments_qty"
+          :value="total.payments_qty"
         >
         </a-statistic>
       </a-col>
@@ -25,7 +25,7 @@
         <a-statistic
           class="centred"
           title="Payments coins"
-          :value="daily.payments_sum"
+          :value="total.payments_sum"
         >
           <template #suffix>
             <span> coins</span>
@@ -38,14 +38,14 @@
 
     <a-row>
       <a-col :span="8">
-        <a-statistic class="centred" title="Media qty" :value="daily.media_qty">
+        <a-statistic class="centred" title="Media qty" :value="total.media_qty">
         </a-statistic>
       </a-col>
       <a-col :span="8">
         <a-statistic
           class="centred"
           title="Media coins"
-          :value="daily.meida_sum"
+          :value="total.meida_sum"
         >
           <template #suffix>
             <span> coins</span>
@@ -56,7 +56,7 @@
         <a-statistic
           class="centred"
           title="Commission coins"
-          :value="daily.commission_sum"
+          :value="total.commission_sum"
         >
           <template #suffix>
             <span> coins</span>
